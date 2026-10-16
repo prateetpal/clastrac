@@ -1,0 +1,31 @@
+{
+  "name": "clastrac",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "db:check": "node scripts/check-mongodb.js",
+    "test:api": "node scripts/test-api.js",
+    "test:math": "node scripts/test-attendance-math.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^18.0.8",
+    "jose": "^5.9.6",
+    "mongodb": "^7.7.0",
+    "mongoose": "^8.9.5",
+    "next": "^14.2.23",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.18",
+    "typescript": "^5.7.3"
+  }
+}

@@ -1,0 +1,531 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "ClasTrac backend typecheck",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"typecheck"
+			],
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Install backend dependencies",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"install"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck backend sources",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"node_modules/typescript/bin/tsc",
+				"--noEmit"
+			],
+			"problemMatcher": [
+				"$tsc"
+			]
+		},
+		{
+			"label": "Build ClasTrac backend",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "Run ClasTrac dev server",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Diagnose MongoDB connection",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"const fs=require('node:fs'); const dns=require('node:dns').promises; const mongoose=require('mongoose'); const line=fs.readFileSync('.env','utf8').split(/\\r?\\n/).find(x=>x.startsWith('MONGODB_URI=')); const raw=line?.slice('MONGODB_URI='.length).trim().replace(/^['\"]|['\"]$/g,''); if(!raw){console.log('MONGODB_URI missing'); process.exit(1)} let uri; try{uri=new URL(raw)}catch{console.log('MONGODB_URI format invalid');process.exit(1)} console.log('URI scheme:',uri.protocol); console.log('SRV lookup starting'); dns.resolveSrv('_mongodb._tcp.'+uri.hostname).then(records=>console.log('SRV records:',records.length)).catch(error=>console.log('SRV lookup error:',error.code||error.name)); (async()=>{try{await mongoose.connect(raw,{serverSelectionTimeoutMS:8000}); await mongoose.connection.db.admin().ping(); console.log('MongoDB ping: connected')}catch(error){console.log('MongoDB connection error:',error.code||error.name)}finally{await mongoose.disconnect().catch(()=>{})}})();"
+			]
+		},
+		{
+			"label": "MongoDB connection probe",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"const fs=require(\"node:fs\"); const dns=require(\"node:dns\").promises; const mongoose=require(\"mongoose\"); const line=fs.readFileSync(\".env\",\"utf8\").split(/\\r?\\n/).find(x=>x.startsWith(\"MONGODB_URI=\")); const raw=line?line.slice(\"MONGODB_URI=\".length).trim().replace(/^['\"]|['\"]$/g,\"\"):\"\"; if(!raw){console.log(\"MONGODB_URI missing\");process.exit(1)} let uri; try{uri=new URL(raw)}catch{console.log(\"MONGODB_URI format invalid\");process.exit(1)} console.log(\"URI scheme:\",uri.protocol); dns.resolveSrv(\"_mongodb._tcp.\"+uri.hostname).then(records=>console.log(\"SRV records:\",records.length)).catch(error=>console.log(\"SRV lookup error:\",error.code||error.name)); (async()=>{try{await mongoose.connect(raw,{serverSelectionTimeoutMS:8000});await mongoose.connection.db.admin().ping();console.log(\"MongoDB ping: connected\")}catch(error){console.log(\"MongoDB connection error:\",error.code||error.name)}finally{await mongoose.disconnect().catch(()=>{})}})();"
+			]
+		},
+		{
+			"label": "MongoDB connectivity check",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"const fs=require(\"node:fs\"); const dns=require(\"node:dns\").promises; const mongoose=require(\"mongoose\"); const line=fs.readFileSync(\".env\",\"utf8\").split(/\\r?\\n/).find(x=>x.startsWith(\"MONGODB_URI=\")); let raw=line?line.slice(\"MONGODB_URI=\".length).trim():\"\"; if(raw.charCodeAt(0)===34||raw.charCodeAt(0)===39)raw=raw.slice(1,-1); if(!raw){console.log(\"MONGODB_URI missing\");process.exit(1)} let uri; try{uri=new URL(raw)}catch{console.log(\"MONGODB_URI format invalid\");process.exit(1)} console.log(\"URI scheme:\",uri.protocol); dns.resolveSrv(\"_mongodb._tcp.\"+uri.hostname).then(records=>console.log(\"SRV records:\",records.length)).catch(error=>console.log(\"SRV lookup error:\",error.code||error.name)); (async()=>{try{await mongoose.connect(raw,{serverSelectionTimeoutMS:8000});await mongoose.connection.db.admin().ping();console.log(\"MongoDB ping: connected\")}catch(error){console.log(\"MongoDB connection error:\",error.code||error.name)}finally{await mongoose.disconnect().catch(()=>{})}})();"
+			]
+		},
+		{
+			"label": "Check MongoDB connection",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"db:check"
+			],
+			"problemMatcher": []
+		},
+		{
+			"label": "npm run dev",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run npm database check",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"db:check"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck database connection fix",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"typecheck"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run all API integration scenarios",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:api"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Rerun all API integration scenarios",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:api"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck API test suite changes",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"typecheck"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck frontend implementation",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"typecheck"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Build frontend implementation",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start ClasTrac frontend preview",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"-p",
+				"3001"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Verify final frontend typecheck",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"typecheck"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Final frontend typecheck",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"typecheck"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Final production frontend build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Start verified ClasTrac preview",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"-p",
+				"3002"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Build latest dashboard refinements",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run ClasTrac frontend after build",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"-p",
+				"3003"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck analytics redesign",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"typecheck"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Build analytics redesign",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Recheck dashboard types",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"typecheck"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run themed dashboard for QA",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"-p",
+				"3004"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check MongoDB for UI test",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"db:check"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Clean temporary browser QA data",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/cleanup-ui-qa.js"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Rerun full API scenarios",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:api"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Typecheck complete theme UI",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"typecheck"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Final production build and check",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Launch final ClasTrac UI preview",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"-p",
+				"3005"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "Restart clean ClasTrac dev server",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"dev",
+				"--",
+				"-p",
+				"3006"
+			],
+			"isBackground": true,
+			"problemMatcher": []
+		},
+		{
+			"label": "ClasTrac audit API tests on 3006",
+			"type": "shell",
+			"command": "cmd",
+			"args": [
+				"/c",
+				"set API_BASE_URL=http://localhost:3006&& npm run test:api"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "ClasTrac attendance math tests",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:math"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run audit API suite at 3006",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"-e",
+				"process.env.API_BASE_URL='http://localhost:3006'; require('./scripts/test-api.js')"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run API suite against active server",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/test-api.js",
+				"http://localhost:3006"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Rerun API integration at 3006",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/test-api.js",
+				"http://localhost:3006"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Check MongoDB persisted data",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/.mongo-data-check.js"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "mongo-data-check",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/.mongo-data-check.js"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Retry MongoDB data check",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/.mongo-data-check.js"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Inspect MongoDB counter discrepancies",
+			"type": "shell",
+			"command": "node",
+			"args": [
+				"scripts/.mongo-data-check.js"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Inspect Git merge state",
+			"type": "shell",
+			"command": "git",
+			"args": [
+				"log",
+				"--oneline",
+				"--graph",
+				"--all",
+				"--decorate",
+				"-20"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run attendance math tests",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:math"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		},
+		{
+			"label": "Run API tests",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"test:api"
+			],
+			"isBackground": false,
+			"problemMatcher": []
+		}
+	]
+}
